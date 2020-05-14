@@ -1,6 +1,6 @@
 <idea-plugin>
   <id>com.wxibm333.easy-http-client</id>
-  <name>easyHttpClient</name>
+  <name>Easy Http Client</name>
   <vendor email="929592332@qq.com" url="https://github.com/wxibm333">wxibm333</vendor>
 
   <description><![CDATA[
