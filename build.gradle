@@ -21,8 +21,9 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2020.1.1'
-    plugins = ['java']
+    version '2020.1'
+    type 'IU'
+    plugins = ['java','restClient','SpringBoot']
 }
 
 tasks.withType(JavaCompile) {

@@ -8,18 +8,24 @@
       <p>Make http file operation more convenient.</p>
     ]]></description>
 
-<!--  <change-notes><![CDATA[-->
-<!--         <li>1.0.0 - easy-http-client plugin init.</li>-->
-<!--    ]]>-->
-<!--  </change-notes>-->
+  <!--  <change-notes><![CDATA[-->
+  <!--         <li>1.0.0 - easy-http-client plugin init.</li>-->
+  <!--    ]]>-->
+  <!--  </change-notes>-->
 
   <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
-  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.java</depends>
+  <depends>com.intellij.spring.boot</depends>
+  <depends>com.jetbrains.restClient</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
+    <!--    <annotator language="JAVA"-->
+    <!--      implementationClass="com.wxibm333.navigate.NavigateToHttpAnnotator"/>-->
+    <codeInsight.lineMarkerProvider language="JAVA"
+      implementationClass="com.wxibm333.navigate.NavigateToHttpLineMarkerProvider"/>
   </extensions>
 
   <actions>
