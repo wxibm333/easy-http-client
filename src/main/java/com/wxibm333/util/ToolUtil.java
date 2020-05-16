@@ -9,6 +9,24 @@ import com.wxibm333.constant.Common;
  */
 public class ToolUtil {
 
+  /**
+   * 格式化url绝对路径,不以'/'开头,以'/'结尾
+   * @author: wangXin
+   * @date: 2020-05-16 13:43
+   *
+   * @param param Url path absolute
+   * @return java.lang.String
+   */
+  public static String formatPath(String param) {
+    while (param.startsWith(Common.DIAGONAL)) {
+      param = param.substring(1);
+    }
+    if (!param.endsWith(Common.DIAGONAL)) {
+      param = param.concat(Common.DIAGONAL);
+    }
+    return param;
+  }
+
   public static String removeFrontAndRearDiagonal(String param) {
     while (param.startsWith(Common.DIAGONAL)) {
       param = param.substring(1);

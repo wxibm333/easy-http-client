@@ -16,6 +16,7 @@ import com.intellij.ws.http.request.psi.HttpRequestCompositeElement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.regex.Pattern;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +27,10 @@ import org.jetbrains.annotations.Nullable;
  * @date 2020-05-14 16:33
  */
 public class HttpRequestUtil {
+
+  private final static String PATH_VARIABLE_REGEX = ".*\\{.*}.*";
+  private final static String PATH_REPLACE_REGEX = "\\{[^/]*}";
+  private final static String PATH_REPLACE_TARGET_REGEX = ".*";
 
   public static Collection<VirtualFile> getHttpRequestFileCandidates(Project project,
       final GlobalSearchScope scope) {
@@ -58,6 +63,34 @@ public class HttpRequestUtil {
     return result;
   }
 
+  /**
+   * 路径匹配
+   *
+   * @param pathSet 从requestMapping获取的请求路径,还未转换成正则
+   * @param path    需要匹配的路径
+   * @return boolean
+   * @author: wangXin
+   * @date: 2020-05-16 12:54
+   */
+  public static boolean regexMatchPath(@Nullable Collection<String> pathSet, String path) {
+    if (pathSet == null || pathSet.size() < 1) {
+      return false;
+    }
+    for (String pathMatch : pathSet) {
+      if(Pattern.matches(PATH_VARIABLE_REGEX, pathMatch)){
+        String replaceAll = pathMatch.replaceAll(PATH_REPLACE_REGEX, PATH_REPLACE_TARGET_REGEX);
+        if (Pattern.matches(replaceAll, path)) {
+          return true;
+        }
+      }else {
+        if (pathMatch.equals(ToolUtil.removeFrontAndRearDiagonal(path))) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   public static Collection<HttpRequest> getHttpRequestByHttpPathAbsolute(Project project,
       @NotNull Collection<String> pathSet) {
     Collection<HttpRequestPsiFile> httpRequestPsiFiles = HttpRequestUtil
@@ -72,8 +105,8 @@ public class HttpRequestUtil {
           HttpPathAbsolute httpPathAbsolute = PsiTreeUtil
               .findChildOfType(httpRequest, HttpPathAbsolute.class);
           if (httpPathAbsolute != null) {
-            String text = ToolUtil.removeFrontAndRearDiagonal(httpPathAbsolute.getText());
-            if (pathSet.contains(text)) {
+            String text = ToolUtil.formatPath(httpPathAbsolute.getText());
+            if (regexMatchPath(pathSet,text)) {
               result.add(httpRequest);
             }
           }

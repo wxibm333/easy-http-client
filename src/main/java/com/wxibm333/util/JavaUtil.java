@@ -50,10 +50,10 @@ public class JavaUtil {
       if (classPathAbsolute != null && methodPathAbsolute != null) {
         Set<String> path = Sets.newHashSet();
         for (String classPath : classPathAbsolute) {
-          classPath = ToolUtil.removeFrontAndRearDiagonal(classPath);
+          classPath = ToolUtil.formatPath(classPath);
           for (String methodPath : methodPathAbsolute) {
             String handlerMethodPath = ToolUtil.removeFrontAndRearDiagonal(methodPath);
-            path.add(classPath.concat(Common.DIAGONAL).concat(handlerMethodPath));
+            path.add(classPath.concat(handlerMethodPath));
           }
         }
         return path;

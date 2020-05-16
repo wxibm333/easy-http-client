@@ -13,6 +13,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ws.http.request.HttpRequestPsiFile;
+import com.intellij.ws.http.request.psi.HttpMethod;
 import com.intellij.ws.http.request.psi.HttpPathAbsolute;
 import com.intellij.ws.http.request.psi.HttpRequest;
 import com.wxibm333.util.HttpRequestUtil;
@@ -34,11 +35,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class NavigateToHttpLineMarkerProvider extends RelatedItemLineMarkerProvider {
 
-  private Collection<HttpRequest> mathHttpPathAbsolute(PsiElement element) {
+  private Collection<HttpMethod> mathByHttpPathAbsolute(PsiElement element) {
     Set<String> restPathAbsolute = JavaUtil.getRestPathAbsolute((PsiMethod) element);
     if (restPathAbsolute != null) {
-      return HttpRequestUtil
+      Collection<HttpRequest> httpRequests = HttpRequestUtil
           .getHttpRequestByHttpPathAbsolute(element.getProject(), restPathAbsolute);
+      return httpRequests.stream().map(HttpRequest::getMethod).collect(Collectors.toList());
     }
     return null;
   }
@@ -49,7 +51,7 @@ public class NavigateToHttpLineMarkerProvider extends RelatedItemLineMarkerProvi
     if (JavaUtil.isRestMethod(element)) {
       Set<String> restPathAbsolute = JavaUtil.getRestPathAbsolute((PsiMethod) element);
       if (restPathAbsolute != null) {
-        Collection<HttpRequest> matchResults = this.mathHttpPathAbsolute(element);
+        Collection<HttpMethod> matchResults = this.mathByHttpPathAbsolute(element);
         if (matchResults != null && !matchResults.isEmpty()) {
           NavigationGutterIconBuilder<PsiElement> builder =
               NavigationGutterIconBuilder.create(RestClientIcons.Request)
