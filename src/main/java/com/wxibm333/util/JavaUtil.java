@@ -63,6 +63,7 @@ public class JavaUtil {
   }
 
   public static @Nullable Set<String> getMethodPathAbsolute(PsiMethod method) {
+    // todo 需要处理获取请求路径httpMethod,参数,body等问题
     Collection<PsiAnnotation> annotations = PsiTreeUtil
         .findChildrenOfType(method, PsiAnnotation.class);
     Set<String> methodPathSet = Sets.newHashSet();
