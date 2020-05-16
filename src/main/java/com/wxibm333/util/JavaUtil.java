@@ -12,6 +12,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.wxibm333.constant.Common;
 import com.wxibm333.constant.SpringClassNames;
@@ -79,9 +80,10 @@ public class JavaUtil {
   }
 
   public static @Nullable Set<String> getClassPathAbsolute(PsiClass psiClass) {
-    // todo 移除方法上的requestMapping
+    // 只获取类上请求路径
+    PsiModifierList modifierList = PsiTreeUtil.getChildOfType(psiClass, PsiModifierList.class);
     Collection<PsiAnnotation> annotations = PsiTreeUtil
-        .findChildrenOfType(psiClass, PsiAnnotation.class);
+        .findChildrenOfType(modifierList, PsiAnnotation.class);
     boolean isRestController = false;
     Set<String> classPathSet = Sets.newHashSet();
     for (PsiAnnotation annotation : annotations) {
