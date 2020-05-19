@@ -13,9 +13,11 @@ import com.intellij.ws.http.request.completion.HttpRequestHostIndex;
 import com.intellij.ws.http.request.psi.HttpPathAbsolute;
 import com.intellij.ws.http.request.psi.HttpRequest;
 import com.intellij.ws.http.request.psi.HttpRequestCompositeElement;
+import com.wxibm333.http.request.Request;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.jetbrains.annotations.NotNull;
@@ -77,12 +79,12 @@ public class HttpRequestUtil {
       return false;
     }
     for (String pathMatch : pathSet) {
-      if(Pattern.matches(PATH_VARIABLE_REGEX, pathMatch)){
+      if (Pattern.matches(PATH_VARIABLE_REGEX, pathMatch)) {
         String replaceAll = pathMatch.replaceAll(PATH_REPLACE_REGEX, PATH_REPLACE_TARGET_REGEX);
         if (Pattern.matches(replaceAll, path)) {
           return true;
         }
-      }else {
+      } else {
         if (pathMatch.equals(ToolUtil.removeFrontAndRearDiagonal(path))) {
           return true;
         }
@@ -91,11 +93,14 @@ public class HttpRequestUtil {
     return false;
   }
 
-  public static Collection<HttpRequest> getHttpRequestByHttpPathAbsolute(Project project,
-      @NotNull Collection<String> pathSet) {
+  public static List<HttpRequest> getHttpRequestByHttpPathAbsolute(Project project,
+      Request request) {
+    final List<HttpRequest> result = new ArrayList<>();
+    if(request == null){
+      return result;
+    }
     Collection<HttpRequestPsiFile> httpRequestPsiFiles = HttpRequestUtil
         .getHttpRequestFile(project, null);
-    final Collection<HttpRequest> result = new HashSet<>();
     for (HttpRequestPsiFile httpRequestPsiFile : httpRequestPsiFiles) {
       PsiElement[] requestPsiFileChildren = httpRequestPsiFile.getChildren();
       for (PsiElement psiElement : requestPsiFileChildren) {
@@ -106,8 +111,12 @@ public class HttpRequestUtil {
               .findChildOfType(httpRequest, HttpPathAbsolute.class);
           if (httpPathAbsolute != null) {
             String text = ToolUtil.formatPath(httpPathAbsolute.getText());
-            if (regexMatchPath(pathSet,text)) {
-              result.add(httpRequest);
+            if (regexMatchPath(request.getPathAbsolute(), text)) {
+              if(request.getMethod().name().equalsIgnoreCase(httpRequest.getHttpMethod())){
+                result.add(0,httpRequest);
+              }else {
+                result.add(httpRequest);
+              }
             }
           }
         }

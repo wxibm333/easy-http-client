@@ -16,7 +16,7 @@ import java.util.Set;
  * @version v1.0.0
  * @date 2020-05-15 14:30
  */
-public class AnnotationUtil {
+public class RequestAnnotationUtil {
 
   public static Set<String> getPathByRequestMappingAnnotation(PsiAnnotation annotation) {
     if (SpringClassNames.REQUEST_COLLECTION.contains(annotation.getQualifiedName())) {

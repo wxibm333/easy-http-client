@@ -16,6 +16,7 @@ import com.intellij.ws.http.request.HttpRequestPsiFile;
 import com.intellij.ws.http.request.psi.HttpMethod;
 import com.intellij.ws.http.request.psi.HttpPathAbsolute;
 import com.intellij.ws.http.request.psi.HttpRequest;
+import com.wxibm333.http.request.Request;
 import com.wxibm333.util.HttpRequestUtil;
 import com.wxibm333.util.JavaUtil;
 import icons.RestClientIcons;
@@ -35,33 +36,27 @@ import org.jetbrains.annotations.NotNull;
  */
 public class NavigateToHttpLineMarkerProvider extends RelatedItemLineMarkerProvider {
 
-  private Collection<HttpMethod> mathByHttpPathAbsolute(PsiElement element) {
-    Set<String> restPathAbsolute = JavaUtil.getRestPathAbsolute((PsiMethod) element);
-    if (restPathAbsolute != null) {
-      Collection<HttpRequest> httpRequests = HttpRequestUtil
-          .getHttpRequestByHttpPathAbsolute(element.getProject(), restPathAbsolute);
-      return httpRequests.stream().map(HttpRequest::getMethod).collect(Collectors.toList());
-    }
-    return null;
+  private List<HttpMethod> mathByHttpPathAbsolute(PsiElement element) {
+    Request request = JavaUtil.getRestPathAbsolute((PsiMethod) element);
+    List<HttpRequest> httpRequests = HttpRequestUtil
+        .getHttpRequestByHttpPathAbsolute(element.getProject(), request);
+    return httpRequests.stream().map(HttpRequest::getMethod).collect(Collectors.toList());
   }
 
   @Override
   protected void collectNavigationMarkers(@NotNull PsiElement element,
       @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
     if (JavaUtil.isRestMethod(element)) {
-      Set<String> restPathAbsolute = JavaUtil.getRestPathAbsolute((PsiMethod) element);
-      if (restPathAbsolute != null) {
-        Collection<HttpMethod> matchResults = this.mathByHttpPathAbsolute(element);
-        if (matchResults != null && !matchResults.isEmpty()) {
-          NavigationGutterIconBuilder<PsiElement> builder =
-              NavigationGutterIconBuilder.create(RestClientIcons.Request)
-                  .setAlignment(GutterIconRenderer.Alignment.CENTER)
-                  .setTargets(matchResults)
-                  .setTooltipTitle("Navigation to target in http file");
-          PsiElement nameIdentifier = ((PsiNameIdentifierOwner) element).getNameIdentifier();
-          if (nameIdentifier != null) {
-            result.add(builder.createLineMarkerInfo(nameIdentifier));
-          }
+      Collection<HttpMethod> matchResults = this.mathByHttpPathAbsolute(element);
+      if (matchResults != null && !matchResults.isEmpty()) {
+        NavigationGutterIconBuilder<PsiElement> builder =
+            NavigationGutterIconBuilder.create(RestClientIcons.Request)
+                .setAlignment(GutterIconRenderer.Alignment.CENTER)
+                .setTargets(matchResults)
+                .setTooltipTitle("Navigation to target in http file");
+        PsiElement nameIdentifier = ((PsiNameIdentifierOwner) element).getNameIdentifier();
+        if (nameIdentifier != null) {
+          result.add(builder.createLineMarkerInfo(nameIdentifier));
         }
       }
     }
