@@ -72,7 +72,7 @@ public class NavigateToJavaLineMarkerProvider extends RelatedItemLineMarkerProvi
       List<PsiElement> psiElementList = this.matchNavigationElement(httpRequest);
       if (psiElementList.size() > 0) {
         NavigationGutterIconBuilder<PsiElement> builder =
-            NavigationGutterIconBuilder.create(AllIcons.Actions.GroupByMethod)
+            NavigationGutterIconBuilder.create(AllIcons.Nodes.MethodReference)
                 .setAlignment(Alignment.LEFT)
                 .setTargets(psiElementList)
                 .setTooltipTitle("Navigation to target in java file");

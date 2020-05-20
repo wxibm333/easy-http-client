@@ -23,8 +23,9 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-    <!--    <annotator language="JAVA"-->
-    <!--      implementationClass="com.wxibm333.navigate.NavigateToHttpAnnotator"/>-->
+    <applicationService serviceInterface="com.wxibm333.service.RestService"
+      serviceImplementation="com.wxibm333.service.impl.RestServiceImpl"/>
+
     <codeInsight.lineMarkerProvider language="JAVA"
       implementationClass="com.wxibm333.navigate.NavigateToHttpLineMarkerProvider"/>
     <codeInsight.lineMarkerProvider language="HTTP Request"

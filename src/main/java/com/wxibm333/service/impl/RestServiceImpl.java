@@ -40,18 +40,20 @@ public class RestServiceImpl extends RestService {
     for (UrlMapping<?> urlMapping : urlMappings) {
       UrlMappingPsiBasedElement psiBasedElement = (UrlMappingPsiBasedElement) urlMapping;
       boolean canResolve = psiBasedElement.canResolve(url);
-      if (canResolve && Objects.isNull(httpMethod)) {
-        returnUrlMappings.add(psiBasedElement);
-      } else {
-        RequestMethod[] method = psiBasedElement.getMethod();
-        boolean matchHttpMethod = false;
-        for (RequestMethod requestMethod : method) {
-          if (!matchHttpMethod) {
-            matchHttpMethod = requestMethod.name().equalsIgnoreCase(httpMethod);
-          }
-        }
-        if (matchHttpMethod) {
+      if (canResolve) {
+        if (Objects.isNull(httpMethod)) {
           returnUrlMappings.add(psiBasedElement);
+        } else {
+          RequestMethod[] method = psiBasedElement.getMethod();
+          boolean matchHttpMethod = false;
+          for (RequestMethod requestMethod : method) {
+            if (!matchHttpMethod) {
+              matchHttpMethod = requestMethod.name().equalsIgnoreCase(httpMethod);
+            }
+          }
+          if (matchHttpMethod) {
+            returnUrlMappings.add(psiBasedElement);
+          }
         }
       }
     }
