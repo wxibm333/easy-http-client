@@ -18,6 +18,7 @@
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.java</depends>
   <depends>com.intellij.spring.boot</depends>
+  <depends>com.intellij.spring.mvc</depends>
   <depends>com.jetbrains.restClient</depends>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -26,6 +27,8 @@
     <!--      implementationClass="com.wxibm333.navigate.NavigateToHttpAnnotator"/>-->
     <codeInsight.lineMarkerProvider language="JAVA"
       implementationClass="com.wxibm333.navigate.NavigateToHttpLineMarkerProvider"/>
+    <codeInsight.lineMarkerProvider language="HTTP Request"
+      implementationClass="com.wxibm333.navigate.NavigateToJavaLineMarkerProvider"/>
   </extensions>
 
   <actions>

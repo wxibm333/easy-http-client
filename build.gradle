@@ -23,7 +23,7 @@ dependencies {
 intellij {
     version '2020.1'
     type 'IU'
-    plugins = ['java','restClient','SpringBoot']
+    plugins = ['java','restClient','SpringBoot','SpringMvc']
 }
 
 tasks.withType(JavaCompile) {
