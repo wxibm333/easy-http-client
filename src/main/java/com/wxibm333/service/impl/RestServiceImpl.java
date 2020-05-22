@@ -45,7 +45,8 @@ public class RestServiceImpl extends RestService {
           returnUrlMappings.add(psiBasedElement);
         } else {
           RequestMethod[] method = psiBasedElement.getMethod();
-          boolean matchHttpMethod = false;
+          // 如果httpMethod（及@RequestMapping）没有指定，则数组长度为0
+          boolean matchHttpMethod = method.length == 0;
           for (RequestMethod requestMethod : method) {
             if (!matchHttpMethod) {
               matchHttpMethod = requestMethod.name().equalsIgnoreCase(httpMethod);
