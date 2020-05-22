@@ -32,5 +32,8 @@ tasks.withType(JavaCompile) {
 
 patchPluginXml {
     changeNotes """
-         1.0 - easy-http-client plugin init."""
+         <ul>
+            <li>1.0.1: Navigation between Java and Http request.</li>
+            <li>1.0.0: easy-http-client plugin init.</li>
+         </ul>"""
 }
