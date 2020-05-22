@@ -6,6 +6,9 @@
   <description><![CDATA[
       <a href="https://github.com/wxibm333/easy-http-client">GitHub</a>
       <p>Make http file operation more convenient.</p>
+      <ul>
+        <li>Only suitable for navigation between java files and Http request files in spring web projects.</li>
+      </ul>
     ]]></description>
 
   <!--  <change-notes><![CDATA[-->
