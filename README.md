@@ -8,6 +8,12 @@
 ##### 查找属于那个模块
 
 ```
+// 通过类全名获取包名对应PsiPackage
+PsiPackage package = JavaPsiFacade.getInstance(this.getModule().getProject()).findPackage(qualifiedName);
+// 通过类全名获取对应的PsiClass
+JavaPsiFacade.getInstance(this.getModule().getProject()).findClass(qualifiedName,GlobalSearchScope);
+
+
 // 如FileInfoServiceImpl属于cl-flie-core模块
 Module moduleForPsiElement=ModuleUtilCore.findModuleForPsiElement(method);
 
