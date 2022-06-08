@@ -8,6 +8,8 @@
 ##### 查找属于那个模块
 
 ```
+// 获取整个项目作用域
+GlobalSearchScope scope = GlobalSearchScope.allScope(this.getModule().getProject());
 // 通过类全名获取包名对应PsiPackage
 PsiPackage package = JavaPsiFacade.getInstance(this.getModule().getProject()).findPackage(qualifiedName);
 // 通过类全名获取对应的PsiClass
