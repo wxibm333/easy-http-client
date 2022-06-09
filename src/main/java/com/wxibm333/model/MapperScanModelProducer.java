@@ -1,11 +1,12 @@
 package com.wxibm333.model;
 
+import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.module.Module;
-import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.spring.SpringLocalModelProducer;
 import com.intellij.spring.contexts.model.LocalAnnotationModel;
+import com.wxibm333.constant.AnnotationNameConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,9 +23,10 @@ public class MapperScanModelProducer implements SpringLocalModelProducer {
     @Override
     public @Nullable LocalAnnotationModel create(@NotNull PsiClass psiClass, @NotNull Module module,
             @NotNull Set<String> activeProfiles) {
-        PsiClass mapperPsiClass = JavaPsiFacade.getInstance(module.getProject())
-                .findClass("cn.cloudlizard.file.mapper.FileInfoMapper",
-                        GlobalSearchScope.allScope(module.getProject()));
-        return Objects.nonNull(mapperPsiClass) ? new MapperScanModel(psiClass, module, activeProfiles) : null;
+        PsiAnnotation psiAnnotation = AnnotationUtil.findAnnotation(psiClass, AnnotationNameConstant.MAPPER_SCAN);
+        if (Objects.nonNull(psiAnnotation)) {
+            return new MapperScanLocalAnnotationModel(psiClass, module, activeProfiles);
+        }
+        return null;
     }
 }

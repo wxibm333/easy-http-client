@@ -14,7 +14,7 @@ import java.util.List;
  * @version v1.0.0
  * @date 2022-06-06 3:45 PM
  */
-public class AnnotationUtil {
+public class AnnoUtil {
     
     /**
      * 获取注解的属性值

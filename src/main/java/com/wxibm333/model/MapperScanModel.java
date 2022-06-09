@@ -9,12 +9,15 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementRef;
 import com.intellij.psi.PsiPackage;
 import com.intellij.psi.ref.AnnotationChildLink;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.spring.CommonSpringModel;
 import com.intellij.spring.contexts.model.CacheableCommonSpringModel;
 import com.intellij.spring.contexts.model.LocalAnnotationModel;
+import com.intellij.spring.contexts.model.LocalModel;
 import com.intellij.spring.model.BeanService;
 import com.intellij.spring.model.SpringBeanPointer;
 import com.intellij.spring.model.aliasFor.SpringAliasFor;
@@ -25,6 +28,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.wxibm333.constant.AnnotationNameConstant;
 import com.wxibm333.util.AnnoUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,70 +59,21 @@ public final class MapperScanModel extends LocalAnnotationModel {
         super(aClass, module, activeProfiles);
     }
     
-    public List<PsiPackage> getScanPackages(@NotNull PsiClass psiClass) {
-        List<PsiPackage> psiPackages = new ArrayList<>();
-        PsiAnnotation annotation = AnnotationUtil.findAnnotation(psiClass, AnnotationNameConstant.MAPPER_SCAN);
-        if (Objects.nonNull(annotation)) {
-            List<String> packagesNameList = AnnoUtil.getAnnotationAttrValue(annotation, "value");
-            for (String packagesName : packagesNameList) {
-                PsiPackage psiPackage = JavaPsiFacade.getInstance(this.getModule()
-                                .getProject())
-                        .findPackage(packagesName);
-                psiPackages.add(psiPackage);
-            }
-            
-        }
-        return psiPackages;
-    }
-    
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public Set<PsiPackage> getMapperInterfacePackage() {
-        Set<PsiPackage> returnList = new HashSet<>();
-        JamStringAttributeMeta.Collection<Collection<PsiPackage>> attributeMeta = new JamStringAttributeMeta.Collection(
-                "value", new PackageJamConverter());
-        AnnotationChildLink annotationChildLink = new AnnotationChildLink(AnnotationNameConstant.MAPPER_SCAN);
-        PsiClass configPsiClass = this.getConfig();
-        PsiElementRef<PsiAnnotation> childRef = annotationChildLink.createChildRef(configPsiClass);
-        for (JamStringAttributeElement<Collection<PsiPackage>> element : attributeMeta.getJam(childRef)) {
-            if (element != null) {
-                Collection<PsiPackage> psiPackages = element.getValue();
-                if (psiPackages != null) {
-                    ContainerUtil.addAllNotNull(returnList, psiPackages);
-                }
-            }
-        }
-        return returnList;
-    }
-    
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Collection<SpringBeanPointer<?>> getLocalBeans() {
-        List<PsiPackage> scanPackagesList = this.getScanPackages(this.getConfig());
-        Set<PsiPackage> mapperInterfaceList = this.getMapperInterfacePackage();
-        for (PsiPackage psiClass : mapperInterfaceList) {
-            System.out.println(psiClass.getQualifiedName());
-        }
-        //        spring 模型管理
-        //        SpringManager instance = SpringManager.getInstance(null);
-        //        SpringModel combinedModel = instance.getCombinedModel(module);
-        //        Set<SpringModel> dependencies = combinedModel.getDependencies();
-        //        dependencies.add(null);
-        //        combinedModel.setDependencies(dependencies);
-        PsiClass psiClass = JavaPsiFacade.getInstance(this.getModule()
-                        .getProject())
-                .findClass("cn.cloudlizard.file.mapper.FileInfoMapper", GlobalSearchScope.allScope(this.getModule()
-                        .getProject()));
-        NotNullLazyValue<Set<SpringBeanPointer<?>>> fileInfoMapper = NotNullLazyValue.lazy(() -> {
+        PsiClass psiClass = this.getConfig();
+        Collection<SpringBeanPointer<?>> returnSet = new HashSet<>();
+        NotNullLazyValue<Set<SpringBeanPointer<?>>> mapperBeanPointer = NotNullLazyValue.lazy(() -> {
             BeanService beanService = BeanService.getInstance();
             Set<SpringBeanPointer<?>> pointers = new LinkedHashSet();
             
-            if (psiClass.isValid() && Objects.nonNull(psiClass.getQualifiedName()) && psiClass.getQualifiedName()
-                    .contains("FileInfoMapper")) {
+            if (psiClass.isValid()) {
                 pointers.add(beanService.createSpringBeanPointer(new CustomSpringComponent(psiClass)));
             }
-            
             return pointers;
         });
-        return fileInfoMapper.getValue();
+        ContainerUtil.addAllNotNull(returnSet, mapperBeanPointer.getValue());
+        return returnSet;
     }
 }

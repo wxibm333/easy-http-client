@@ -1,41 +1,48 @@
 <idea-plugin>
-  <id>com.wxibm333.easy-http-client</id>
-  <name>Easy Http Client</name>
-  <vendor email="929592332@qq.com" url="https://github.com/wxibm333">wxibm333</vendor>
-
-  <description><![CDATA[
+    <id>com.wxibm333.easy-http-client</id>
+    <name>Easy Http Client</name>
+    <vendor email="929592332@qq.com" url="https://github.com/wxibm333">wxibm333</vendor>
+    
+    <description><![CDATA[
       <a href="https://github.com/wxibm333/easy-http-client">GitHub</a>
       <p>Make http file operation more convenient.</p>
       <ul>
         <li>Only suitable for navigation between java files and Http request files in spring web projects.</li>
       </ul>
     ]]></description>
-
-  <!--  <change-notes><![CDATA[-->
-  <!--         <li>1.0.0 - easy-http-client plugin init.</li>-->
-  <!--    ]]>-->
-  <!--  </change-notes>-->
-
-  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <depends>com.intellij.modules.platform</depends>
-  <depends>com.intellij.modules.java</depends>
-  <depends>com.intellij.spring.boot</depends>
-  <depends>com.intellij.spring.mvc</depends>
-  <depends>com.jetbrains.restClient</depends>
-
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-    <applicationService serviceInterface="com.wxibm333.service.RestService"
-      serviceImplementation="com.wxibm333.service.impl.RestServiceImpl"/>
-
-    <codeInsight.lineMarkerProvider language="JAVA"
-      implementationClass="com.wxibm333.navigate.NavigateToHttpLineMarkerProvider"/>
-    <codeInsight.lineMarkerProvider language="HTTP Request"
-      implementationClass="com.wxibm333.navigate.NavigateToJavaLineMarkerProvider"/>
-  </extensions>
-
-  <actions>
-    <!-- Add your actions here -->
-  </actions>
+    
+    <!--  <change-notes><![CDATA[-->
+    <!--         <li>1.0.0 - easy-http-client plugin init.</li>-->
+    <!--    ]]>-->
+    <!--  </change-notes>-->
+    
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.spring</depends>
+    <depends>com.intellij.spring.boot</depends>
+    <depends>com.intellij.spring.mvc</depends>
+    <depends>com.jetbrains.restClient</depends>
+    
+    <!--  <extensionPoints>-->
+    <!--    <extensionPoint name="requestNavigator"-->
+    <!--      interface="com.intellij.spring.web.mvc.request.RequestNavigator"/>-->
+    <!--  </extensionPoints>-->
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <spring.localModelProducer implementation="com.wxibm333.model.MapperScanModelProducer"/>
+        <codeInsight.lineMarkerProvider language="UAST" order="first"
+            implementationClass="com.wxibm333.navigate.MapperScanAnnotator"/>
+        <localInspection language="JAVA" displayName="@MapperScan setup"
+            bundle="messages.SpringBundle"
+            enabledByDefault="true" level="ERROR"
+            implementationClass="com.wxibm333.highlighting.MapperScanInspection" shortName="MapperScan"
+            groupKey="inspection.group.code"/>
+    </extensions>
+    
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+    <resource-bundle>messages.Wxibm333Bundle</resource-bundle>
 </idea-plugin>
