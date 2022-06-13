@@ -14,6 +14,7 @@ GlobalSearchScope scope = GlobalSearchScope.allScope(this.getModule().getProject
 PsiPackage package = JavaPsiFacade.getInstance(this.getModule().getProject()).findPackage(qualifiedName);
 // 通过类全名获取对应的PsiClass
 JavaPsiFacade.getInstance(this.getModule().getProject()).findClass(qualifiedName,GlobalSearchScope);
+PsiClass mapperScanAnnotationClass = SpringCommonUtils.findLibraryClass(module,AnnotationNameConstant.MAPPER_SCAN);
 
 
 // 如FileInfoServiceImpl属于cl-flie-core模块

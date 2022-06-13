@@ -17,6 +17,7 @@ import com.intellij.spring.model.CommonSpringBean;
 import com.intellij.spring.model.custom.CustomLocalComponentsDiscoverer;
 import com.intellij.spring.model.jam.converters.PackageJamConverter;
 import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
+import com.intellij.spring.model.utils.SpringCommonUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.wxibm333.constant.AnnotationNameConstant;
 import org.jetbrains.annotations.NotNull;
@@ -59,12 +60,15 @@ public class SpringMapperScanBeansProvider extends CustomLocalComponentsDiscover
         if (Objects.nonNull(module)) {
             Project project = module.getProject();
             GlobalSearchScope globalSearchScope = GlobalSearchScope.allScope(project);
-            PsiClass mapperScanAnnotationClass = JavaPsiFacade.getInstance(project)
-                    .findClass(AnnotationNameConstant.MAPPER_SCAN, globalSearchScope);
+            // 项目(module和library)中MapperScan注解PsiClass对象
+            PsiClass mapperScanAnnotationClass = SpringCommonUtils.findLibraryClass(module,
+                    AnnotationNameConstant.MAPPER_SCAN);
             if (Objects.nonNull(mapperScanAnnotationClass)) {
+                // 通过注解查找配置使用的类
                 Collection<PsiClass> psiClasses = AnnotatedElementsSearch.searchPsiClasses(mapperScanAnnotationClass,
                                 globalSearchScope)
                         .findAll();
+                // 查找mapper接口
                 for (PsiClass configMapperScanClass : psiClasses) {
                     Set<PsiPackage> mapperInterfacePackage = this.getMapperInterfacePackage(configMapperScanClass);
                     for (PsiPackage psiPackage : mapperInterfacePackage) {

@@ -31,7 +31,8 @@
     <!--  </extensionPoints>-->
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <spring.localModelProducer implementation="com.wxibm333.model.MapperScanModelProducer"/>
+<!--        <spring.localModelProducer implementation="com.wxibm333.model.MapperScanModelProducer"/>-->
+        <spring.customLocalComponentsDiscoverer implementation="com.wxibm333.model.SpringMapperScanBeansProvider"/>
         <codeInsight.lineMarkerProvider language="UAST" order="first"
             implementationClass="com.wxibm333.navigate.MapperScanAnnotator"/>
         <localInspection language="JAVA" displayName="@MapperScan setup"
