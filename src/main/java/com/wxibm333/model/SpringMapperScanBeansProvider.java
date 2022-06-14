@@ -4,7 +4,6 @@ import com.intellij.jam.JamStringAttributeElement;
 import com.intellij.jam.reflect.JamStringAttributeMeta;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementRef;
@@ -36,6 +35,14 @@ import java.util.Set;
  */
 public class SpringMapperScanBeansProvider extends CustomLocalComponentsDiscoverer {
     
+    /**
+     * 通过配置包名获取Mapper的扫描的包名
+     *
+     * @param configPsiClass spring boot 中带有@MapperScan注解的配置类
+     * @return java.util.Set<com.intellij.psi.PsiPackage>
+     * @author wangxin
+     * @date 2022-06-13 1:46 PM
+     */
     public Set<PsiPackage> getMapperInterfacePackage(PsiClass configPsiClass) {
         Set<PsiPackage> returnList = new HashSet<>();
         JamStringAttributeMeta.Collection<Collection<PsiPackage>> attributeMeta = new JamStringAttributeMeta.Collection(
@@ -51,6 +58,30 @@ public class SpringMapperScanBeansProvider extends CustomLocalComponentsDiscover
             }
         }
         return returnList;
+    }
+    
+    /**
+     * 递归扫描mapper接口，并加入myBatisMappers集合中
+     *
+     * @param scope          查询作用域
+     * @param psiPackage     需处理的包
+     * @param myBatisMappers 收集的mapper集合
+     * @author wangxin
+     * @date 2022-06-14 9:42 AM
+     */
+    private static void processBasePackage(GlobalSearchScope scope, PsiPackage psiPackage,
+            Collection<CommonSpringBean> myBatisMappers) {
+        PsiClass[] psiClassArray = psiPackage.getClasses(scope);
+        for (PsiClass psiClass : psiClassArray) {
+            if (psiClass.isInterface()) {
+                myBatisMappers.add(new CustomSpringComponent(psiClass));
+            }
+        }
+        
+        PsiPackage[] subPackages = psiPackage.getSubPackages(scope);
+        for (PsiPackage subPackage : subPackages) {
+            processBasePackage(scope, subPackage, myBatisMappers);
+        }
     }
     
     @Override
@@ -72,10 +103,7 @@ public class SpringMapperScanBeansProvider extends CustomLocalComponentsDiscover
                 for (PsiClass configMapperScanClass : psiClasses) {
                     Set<PsiPackage> mapperInterfacePackage = this.getMapperInterfacePackage(configMapperScanClass);
                     for (PsiPackage psiPackage : mapperInterfacePackage) {
-                        PsiClass[] classes = psiPackage.getClasses();
-                        for (PsiClass mapperPsiClass : classes) {
-                            myBatisMappers.add(new CustomSpringComponent(mapperPsiClass));
-                        }
+                        processBasePackage(globalSearchScope, psiPackage, myBatisMappers);
                     }
                 }
             }
