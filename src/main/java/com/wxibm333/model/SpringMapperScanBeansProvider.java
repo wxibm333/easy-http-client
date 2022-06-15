@@ -28,7 +28,7 @@ import java.util.Set;
 
 /**
  * 请参考 {@link com.intellij.spring.model.extensions.myBatis.SpringMyBatisBeansProvider}
- *
+ * 提供MapperScan支持,移除构造器注入，Autowired等错误注入红色警告
  * @author wangXin
  * @version v1.0.0
  * @date 2022-06-10 10:17 AM

@@ -36,6 +36,5 @@ public final class MapperScanAnnotator extends SpringAnnotatorBase {
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement psiElement,
             @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
-        
     }
 }

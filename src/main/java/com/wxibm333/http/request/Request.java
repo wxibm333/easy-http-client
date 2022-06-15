@@ -1,6 +1,5 @@
 package com.wxibm333.http.request;
 
-import com.intellij.psi.PsiElement;
 import java.util.Set;
 
 /**

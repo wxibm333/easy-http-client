@@ -31,19 +31,15 @@
     <!--  </extensionPoints>-->
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-<!--        <spring.localModelProducer implementation="com.wxibm333.model.MapperScanModelProducer"/>-->
+        <!--        <spring.localModelProducer implementation="com.wxibm333.model.MapperScanModelProducer"/>-->
+        <!-- 移除Mapper注入时，出现的红色警告-->
         <spring.customLocalComponentsDiscoverer implementation="com.wxibm333.model.SpringMapperScanBeansProvider"/>
         <codeInsight.lineMarkerProvider language="UAST" order="first"
             implementationClass="com.wxibm333.navigate.MapperScanAnnotator"/>
-        <localInspection language="JAVA" displayName="@MapperScan setup"
-            bundle="messages.SpringBundle"
-            enabledByDefault="true" level="ERROR"
-            implementationClass="com.wxibm333.highlighting.MapperScanInspection" shortName="MapperScan"
-            groupKey="inspection.group.code"/>
     </extensions>
     
     <actions>
         <!-- Add your actions here -->
     </actions>
-    <resource-bundle>messages.Wxibm333Bundle</resource-bundle>
+    <resource-bundle>messages.MyBatisBundle</resource-bundle>
 </idea-plugin>
