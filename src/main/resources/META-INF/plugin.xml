@@ -33,7 +33,7 @@
         <!-- Add your extensions here -->
         <!--        <spring.localModelProducer implementation="com.wxibm333.model.MapperScanModelProducer"/>-->
         <!-- 移除Mapper注入时，出现的红色警告-->
-        <spring.customLocalComponentsDiscoverer implementation="com.wxibm333.model.SpringMapperScanBeansProvider"/>
+        <spring.customLocalComponentsDiscoverer implementation="com.wxibm333.provider.SpringMapperScanBeansProvider"/>
         <codeInsight.lineMarkerProvider language="UAST" order="first"
             implementationClass="com.wxibm333.navigate.MapperScanAnnotator"/>
     </extensions>

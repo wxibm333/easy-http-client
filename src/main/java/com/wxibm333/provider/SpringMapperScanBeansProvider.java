@@ -1,4 +1,4 @@
-package com.wxibm333.model;
+package com.wxibm333.provider;
 
 import com.intellij.jam.JamStringAttributeElement;
 import com.intellij.jam.reflect.JamStringAttributeMeta;
