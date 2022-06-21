@@ -11,6 +11,8 @@ import com.intellij.util.xml.CustomReferenceConverter;
 import com.intellij.util.xml.DomJavaUtil;
 import com.intellij.util.xml.GenericDomValue;
 import com.intellij.util.xml.PsiClassConverter;
+import com.wxibm333.alias.AliasClassReference;
+import com.wxibm333.alias.AliasFacade;
 import com.wxibm333.constant.StrConstant;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
